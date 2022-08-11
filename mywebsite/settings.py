@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import dj_database_url
-from hidden import DATABASE_URL, SECRET_KEY
+# from hidden import get_database_url, get_secret_key
 
 from pathlib import Path
 import os
@@ -23,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = SECRET_KEY
+SECRET_KEY = 'django-insecure-(9y3dzs5!^tnd=a_=7qjs2ud4imylcv+x2=f8j_emc=@8_&t3v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['dimitri-news.herokuapp.com', '127.0.0.1']
 
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -91,7 +92,7 @@ WSGI_APPLICATION = 'mywebsite.wsgi.application'
 #     }
 # }
 
-DATABASE_URL = DATABASE_URL
+DATABASE_URL = 'postgres://uiphiaeqdjtgyx:3e2a8b68073bd9567f2e0ab205cfc325bd5124f847e77f52df5040598bbc23ae@ec2-176-34-215-248.eu-west-1.compute.amazonaws.com:5432/d1ur6qhcuk7ak3'
 
 DATABASES = {
     'default': dj_database_url.config(default=DATABASE_URL)
@@ -138,6 +139,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
 
+STATICFILES_STORAGE =  'django.contrib.staticfiles.storage.StaticFilesStorage' 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # Uncomment when deploying the app
 
 # Default primary key field type
