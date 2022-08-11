@@ -1,0 +1,29 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<main class="formPage">
+    <div class="content-box">
+        <div class="formWrapper">
+            <a class="backButton" href="{% url 'user_profile' recipient.id %}"><i class="bx bx-chevron-left"></i></a>
+            <br>
+
+            <form class="form" action="#" method="POST" id="send_msg_form">
+                {% csrf_token %}
+                <!-- Input:Subject -->
+                <div class="msg_input_box">
+                    <input type="text" name="subject" placeholder="Subject" class="msg_input"/>
+                </div>
+
+                <!-- Input:Body -->
+                <div class="msg_input_box">
+                    <textarea type="text" name="body" placeholder="Write your message here..." class="msg_input"></textarea>
+                </div>
+
+                <a class="msg_btn_send" href="#" id="send_msg">Send Message</a>
+            </form>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

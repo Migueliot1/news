@@ -1,0 +1,68 @@
+{% load static %}
+
+<div class="acc_show">
+    <div class="acc_show_btns">
+        <div class="acc_icon">
+            <div class="acc_notifications_btn">
+                <i class='bx bx-bell'></i>
+            </div>
+        </div>
+
+        {% if request.user.is_authenticated %}
+        <a class="acc_logged_in" href="{% url 'user_profile' profile.id %}">
+            <img src="{{ profile.profile_image.url }}" class="acc_login_img">
+        </a>
+
+        <div class="acc_icon" id="acc_show_menu" onclick="showAccMenu()">
+            <div class="acc_drop_down">
+                <i class='bx bx-chevron-down' id="arrow_to_rotate"></i>       
+            </div>
+        </div>
+        {% else %}
+        <div class="acc_login_btn">
+            <a class="acc_login_link" href="{% url 'login' %}">
+                <i class='bx bx-user bx-sm' id="user_icon"></i>
+                <span class="acc__txt">Login</span>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if request.user.is_authenticated %}
+    <div class="acc_menu" id="acc_menu_to_show" style="display: none;">
+        <p class="acc_menu__title">My Profile</p>
+        
+            <a class="acc_menu_user__btn" href="{% url 'user_profile' profile.id %}">
+                <div class="acc_menu__user-card">
+                    <div class="acc_menu__user-card__img_wrapper">
+                        <img src="{{ profile.profile_image.url }}" class="acc_menu__user-card__img" />
+                    </div>
+                    
+                    <span class="acc_menu__user-card__text">{{ profile.username }}</span>
+                </div>
+            </a>
+        
+        <a class="acc_menu__btn" href="{% url 'inbox' %}">
+            <div class="acc_menu__item">
+                <i class='bx bx-envelope' ></i>
+                <span class="acc_menu__span">Messages</span>
+            </div>
+        </a>
+
+        <a class="acc_menu__btn" href="#">
+            <div class="acc_menu__item">
+                <i class='bx bx-cog' ></i>
+                <span class="acc_menu__span">Settings</span>
+            </div>
+        </a>
+
+        <a class="acc_menu__btn" href="{% url 'logout' %}">
+            <div class="acc_menu__item">
+                <i class='bx bx-log-out'></i>
+                <span class="acc_menu__span">Logout</span>
+            </div>
+        </a>
+    </div>
+
+    {% endif %}
+</div>

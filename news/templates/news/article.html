@@ -1,0 +1,212 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load news_tags %}
+
+{% block content %}
+
+<div class="article-wrapper">
+    <div class="article">
+        <div class="article__title">
+            <h1>{{ article.title }}</h1>
+        </div>
+        <hr class="article__title_hr">
+        <div class="article__contents">
+            <div class="article_img">
+                {% static "" as baseUrl %}
+                <img src="{{baseUrl}}{{article.image_path}}" class="article__img_wrapped" />
+            </div> 
+            <div class="article__synopsis_wrapper">
+                <div class="article__synopsis_wrapped">
+                    <div class="article__synopsis_box">
+                        <span class="article__synopsis">{{ article.synopsis }}</span>
+                    </div>
+                    <div class="article__publish_time_box">
+                        <span class="article__publish_time">{{ article.publish_time }}</span>
+                        <a href="{{article.link_id.link}}{{article.link_main}}" class="article__website_link">{{ article.link_id.website_name }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="article__comments_header">
+        <h1>Comments</h1>
+    </div>
+
+    <hr>
+
+    {% for comment in comments %}
+
+    {% if not comment.is_answer %}
+
+    <div class="article__comments_body">
+        <a href="{% url 'user_profile' comment.owner.id %}" class="article__comment_user">
+            <div class="acc__comment_user_left">
+                <img class="acc__comment_user_img" src="{{ comment.owner.profile_image.url }}" />
+                <div class="acc__comment_user_time">
+                    <p class="acc__comment_username">{{ comment.owner.username }}</p>
+                    <p class="acc__comment_time">{{ comment.created }}</p>
+                </div>
+            </div>
+            <div class="acc__comment_user_right">
+                <div class="acc__comment_vote">
+
+                    <form class="downvote_comment_form" action="#" method="POST" id="downvote_form">
+                        {% csrf_token %}
+                        <input type="hidden" name="downvoted_comment_id" value='{{comment.id}}' />
+                        <button type="submit" id="completed-task" class="fabutton">
+                            {% if request.user.is_authenticated %}
+                            {% if comment.id|downvote_check:profile.id %}
+                                <i class="bx bx-chevron-down" value="D" id="previously_downvoted_btn"></i>
+                                {% else %}
+                                <i class="bx bx-chevron-down" value="D" id="downvote_btn"></i>
+                                {% endif %}
+                            {% else %}
+                            <i class="bx bx-chevron-down" value="D" id="downvote_btn"></i>
+                            {% endif %}
+                        </button>
+                    </form>
+
+                    <span class="comment_rating">{{comment.id|comment_rating}}</span>
+
+                    <form class="upvote_comment_form" action="#" method="POST" id="upvote_form">
+                        {% csrf_token %}
+                        <input type="hidden" name="upvoted_comment_id" value='{{comment.id}}' />
+                        <button type="submit" id="completed-task" class="fabutton">
+                            {% if request.user.is_authenticated %}
+                                {% if comment.id|upvote_check:profile.id %}
+                                <i class="bx bx-chevron-up" value="U" id="previously_upvoted_btn"></i>
+                                {% else %}
+                                <i class="bx bx-chevron-up" value="U" id="upvote_btn"></i>
+                                {% endif %}
+                            {% else %}
+                            <i class="bx bx-chevron-up" value="U" id="upvote_btn"></i>
+                            {% endif %}
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+        </a>
+        <div class="article__comment_content">
+            <div class="article__comment_text">
+                <p class="article__comment_text_comment">{{ comment.comment_body|linebreaksbr }}</p>
+            </div>
+            <div class="article__comment_answer">
+                <a class="article__comment_answer_btn" onclick="showBigCommentAnswerForm('form_big_answer--{{forloop.counter}}')">Answer</a>
+                {% if request.user.is_authenticated %}
+                    {% if request.user == comment.owner.user %}
+                        <a href="{% url 'delete_comment' comment.id %}" class="article__comment_delete_btn">Delete</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <form class="form__answer" action="#" method="POST" id="form_big_answer--{{forloop.counter}}" style="display: none;">
+        {% csrf_token %}
+        <div class="form__field">
+            <input type="hidden" name="answered_comment_id" value='{{comment.id}}' />
+            {{answer_form.comment_body}}
+        </div>
+        <input class="comment__submit" type="submit" value="Answer">
+    </form>
+
+    {% endif %}
+
+    {% for answer in answers %}
+
+        {% if answer.answer_to == comment %}
+        
+        <div class="article__comments_answer_body">
+            <a href="{% url 'user_profile' answer.owner.id %}" class="article__comment_user">
+                <div class="acc__comment_user_left">
+                    <img class="acc__comment_user_img" src="{{ answer.owner.profile_image.url }}" />
+                    <div class="acc__comment_user_time">
+                        <p class="acc__comment_username">{{ answer.owner.username }}</p>
+                        <p class="acc__comment_time">{{ answer.created }}</p>
+                    </div>
+                </div>
+                <div class="acc__comment_user_right">
+                    <div class="acc__comment_vote">
+
+                        <form class="downvote_comment_form" action="#" method="POST" id="downvote_form">
+                            {% csrf_token %}
+                            <input type="hidden" name="downvoted_comment_id" value='{{answer.id}}' />
+                            <button type="submit" id="completed-task" class="fabutton">
+                                {% if request.user.is_authenticated %}
+                                {% if answer.id|downvote_check:profile.id %}
+                                    <i class="bx bx-chevron-down" value="D" id="previously_downvoted_btn"></i>
+                                    {% else %}
+                                    <i class="bx bx-chevron-down" value="D" id="downvote_btn"></i>
+                                    {% endif %}
+                                {% else %}
+                                <i class="bx bx-chevron-down" value="D" id="downvote_btn"></i>
+                                {% endif %}
+                            </button>
+                        </form>
+
+                        <span class="comment_rating">{{answer.id|comment_rating}}</span>
+
+                        <form class="upvote_comment_form" action="#" method="POST" id="upvote_form">
+                            {% csrf_token %}
+                            <input type="hidden" name="upvoted_comment_id" value='{{answer.id}}' />
+                            <button type="submit" id="completed-task" class="fabutton">
+                                {% if request.user.is_authenticated %}
+                                    {% if answer.id|upvote_check:profile.id %}
+                                    <i class="bx bx-chevron-up" value="U" id="previously_upvoted_btn"></i>
+                                    {% else %}
+                                    <i class="bx bx-chevron-up" value="U" id="upvote_btn"></i>
+                                    {% endif %}
+                                {% else %}
+                                <i class="bx bx-chevron-up" value="U" id="upvote_btn"></i>
+                                {% endif %}
+                            </button>
+                       </form>
+                    </div>
+                </div>
+            </a>
+            <div class="article__comment_content">
+                <div class="article__comment_text">
+                    <p class="article__comment_text_comment">{{ answer.comment_body|linebreaksbr }}</p>
+                </div>
+                <div class="article__comment_answer">
+                    <a class="article__comment_answer_btn" onclick="showCommentAnswerForm('form_answer--{{forloop.counter}}')">Answer</a>
+                    {% if request.user.is_authenticated %}
+                        {% if request.user == answer.owner.user %}
+                            <a href="{% url 'delete_comment' answer.id %}" class="article__comment_delete_btn">Delete</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+        <form class="form__answer" action="#" method="POST" id="form_answer--{{forloop.counter}}" style="display: none;">
+            {% csrf_token %}
+            <div class="form__field">
+                <input type="hidden" name="answered_comment_id" value='{{comment.id}}' />
+                {{answer_form.comment_body}}
+            </div>
+            <input class="comment__submit" type="submit" value="Answer">
+        </form>
+
+        {% endif %}
+        
+    {% endfor %}
+        
+
+    {% endfor %}
+
+    <form class="form" action="#" method="POST">
+        {% csrf_token %}
+        <div class="form__field">
+            <textarea id="formInput#textarea" class="input--textarea" name="comment" placeholder="Write your comment here..."></textarea>
+        </div>
+        <input class="comment__submit" type="submit" value="Comment">
+    </form>
+    
+</div>
+
+{% endblock %}

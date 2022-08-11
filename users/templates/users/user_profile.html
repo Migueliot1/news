@@ -1,0 +1,90 @@
+{% extends 'main.html' %}
+{% load news_tags %}
+
+{% block content %}
+
+<div class="profile-wrapper">
+    <div class="profile">
+        
+        <div class="profile__contents">
+            <div class="profile__img">
+                <img src="{{ single_user.profile_image.url }}" class="profile__img_wrapped" />
+            </div>
+            <div class="profile__header">
+                {% if request.user.is_authenticated and request.user == single_user.user %}
+                <h1>Your Profile</h1>
+                {% else %}
+                <h1>{{single_user.username}}'s Profile</h1>
+                {% endif %}
+            </div>
+            <div class="profile__info">
+                <div class="profile__box">
+                    <i class='bx bx-user profile__icon'></i>
+                    <span class="profile__username">{{ single_user.username }}</span>
+                </div>
+                <div class="profile__box">
+                    <i class='bx bx-notepad profile__icon'></i>
+                    <span class="profile__bio">{{ single_user.short_bio }}</span>
+                </div>
+                <div class="profile__box">
+                    <i class='bx bx-upvote profile__icon' ></i>
+                    <span>Your Karma: {{ single_user.id|rating_count }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if request.user.is_authenticated and request.user != single_user.user %}
+    <a class="msg_btn" href="{% url 'create_message' single_user.id %}">Send Message</a>
+    {% endif %}
+
+
+    <div class="profile__comments__header">
+        <h1>Your Comments</h1>
+    </div>
+
+    <hr>
+
+    <div class="article__comments_history">
+
+        {% for comment in comments %}
+
+        <div class="article__comments_body">
+            <a class="comment_link_wrapper" href="{% url 'single_article' comment.post.link_main %}">
+                <div class="article__comment_user">
+                    <div class="acc__comment_user_left">
+                        <img class="acc__comment_user_img" src="{{ comment.owner.profile_image.url }}" />
+                        <div class="acc__comment_user_time">
+                            <p class="acc__comment_username">{{ comment.owner.username }}</p>
+                            <p class="acc__comment_time">{{ comment.created }}</p>
+                        </div>
+                    </div>
+                    <div class="acc__comment_user_right">
+                        <div class="acc__comment_vote">
+                            <span>{{ comment.id|comment_rating }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="article__comment_content">
+                    <div class="article__comment_text">
+                        <p class="article__comment_text_comment">{{ comment.comment_body|linebreaksbr }}</p>
+                    </div>
+                </a>
+                    <div class="article__comment_answer">
+                        {% if request.user.is_authenticated %}
+                            {% if request.user == comment.owner.user %}
+                                <a href="{% url 'delete_comment' comment.id %}" class="article__comment_delete_btn">Delete</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+{% endblock %}

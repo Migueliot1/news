@@ -1,0 +1,10 @@
+admin:
+dimitri
+dimitri
+
+steveo/tim
+waytoodank8
+
+BACKUP
+article pcgamer searchable:
+<div class="listingResult small result.+? " data-page="1">(.+?<a class="category-link" href=".+?</a>)

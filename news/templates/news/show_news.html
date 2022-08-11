@@ -1,0 +1,59 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load news_tags %}
+
+
+{% block content %}
+
+
+    <div class="cards">
+
+        {% for article in articles %}
+
+        <div class="card">
+        <div class="card-img">
+
+            <figure class="card-image-wrap">
+            <div class="image-remove-flow-width-setter">
+                <div class="image-remove-reflow-container landscape">
+                {% static "" as baseUrl %}
+                <img src="{{baseUrl}}{{article.image_path}}">
+                </div>
+            </div>
+            </figure>
+
+        </div>
+        <div class="card-content">
+            <header>
+                <a href="{% url 'single_article' article.link_main %}">
+                    <h3>{{article.title}}</h3>
+                </a>
+            </header>
+            <div class="syns-time-btn-content">
+                <p class="synopsis">{{article.synopsis}}</p>
+                <div class="time_comments_num">
+                    <p class="publish-time">{{article.publish_time}}</p>         
+                    <a href="{% url 'single_article' article.link_main %}" class="comments_num">
+                        {% if article.id|article_comments_count > 0 %}
+                        <p class="comments_amount">Comments: {{ article.id|article_comments_count }}</p>
+                        {% endif %}
+                        <i class='bx bx-comment'></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <a class="website-name" href="{{article.link_id.link}}{{article.link_main}}">
+            {{article.link_id.website_name}}
+        </a>
+        </div>
+        
+        <hr>
+
+        {% endfor %}
+
+    </div>
+
+
+
+{% endblock %}

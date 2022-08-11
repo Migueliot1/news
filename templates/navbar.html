@@ -1,0 +1,29 @@
+<div class="nav" id="nav">
+    <nav class="nav__content">
+        <div class="nav__toggle" id="nav-toggle">
+            <i class='bx bx-chevron-right' ></i>
+        </div>
+
+        <a href="{% url 'news_main' %}" class="nav__logo">
+            <i class='bx bx-news' ></i>
+            <span class="nav__logo-name">News</span>
+        </a>
+
+        <div class="nav__list">
+            <a href="#" class="nav__link">
+                <i class='bx bx-message' ></i>
+                <span class="nav__name">Latest</span>
+            </a>
+
+            <a href="{% url 'inbox' %}" class="nav__link">
+                <i class='bx bx-envelope' ></i>
+                <span class="nav__name">Messages</span>
+            </a>
+
+            <a href="{% url 'about_page' %}" class="nav__link">
+                <i class='bx bx-info-circle'></i>
+                <span class="nav__name">About</span>
+            </a>
+        </div>
+    </nav>
+</div>
