@@ -21,3 +21,11 @@ _Website showcase_
 - notifications for upvotes and answers
 - categories for different types of news (videogames, movies, anime, etc.)
 - proper chat window for messaging
+
+
+#### Demo link (images don't load because of Heroku but the general functionality is working):
+https://dimitri-news.herokuapp.com/
+
+You can use this account to test out the functionality of the website - 
+login: stevo
+password: testing12
